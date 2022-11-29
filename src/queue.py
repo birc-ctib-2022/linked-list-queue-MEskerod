@@ -84,25 +84,31 @@ class Queue(Generic[T]):
 
     def __init__(self) -> None:
         """Make a new queue."""
-        # FIXME: code here
-        ...
+        self.queue = DLList()
+
+    def __str__(self) -> str:
+        return str(self.queue)
+
+    def __eq__(self, other: object) -> bool:
+        return self.queue == other.queue
 
     def is_empty(self) -> bool:
         """Check if this queue is empty."""
-        # FIXME: code here
-        ...
+        if self.queue.head.next == self.queue.head:
+            return True
+        else:
+            return False
 
     def enqueue(self, x: T) -> None:
         """Add x to the back of this queue."""
-        # FIXME: code here
-        ...
+        insert_after(self.queue.head.prev, x)
 
     def front(self) -> T:
         """Get the front element of the queue."""
-        # FIXME: code here
-        ...
+        return self.queue.head.next.val
 
     def dequeue(self) -> T:
         """Get the front element, remove it from the queue, and return it."""
-        # FIXME: code here
-        ...
+        front = self.queue.head.next
+        remove_link(front)
+        return front.val
