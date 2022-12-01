@@ -28,6 +28,12 @@ def insert_after(link: Link[T], val: T) -> None:
     new_link.prev.next = new_link
     new_link.next.prev = new_link
 
+def inser_before(link: Link[T], val: T) -> None:
+    """Add a new link containin val before link"""
+    new_link = Link(val, link.prev, link)
+    new_link.prev.next = new_link
+    new_link.next.prev = new_link
+
 
 def remove_link(link: Link[T]) -> None:
     """Remove link from the list."""
@@ -79,7 +85,7 @@ class DLList(Generic[T]):
     __repr__ = __str__  # because why not?
 
 
-class Queue(Generic[T]):
+class LinkedListdeque(Generic[T]):
     """A queue of type-T elements."""
 
     def __init__(self) -> None:
@@ -99,16 +105,77 @@ class Queue(Generic[T]):
         else:
             return False
 
-    def enqueue(self, x: T) -> None:
-        """Add x to the back of this queue."""
-        insert_after(self.queue.head.prev, x)
+    def enqueue(self, x: T, last=True) -> None:
+        """Add x to the end of this queue.
+        If elements has to be added to the front, end=False"""
+        if last:
+            insert_after(self.queue.head.prev, x)
+        else: 
+            inser_before(self.queue.head.next, x)
 
     def front(self) -> T:
         """Get the front element of the queue."""
         return self.queue.head.next.val
+    
+    def end(self) -> T:
+        """Get the last element of the queue"""
+        return self.queue.head.prev.val
 
-    def dequeue(self) -> T:
-        """Get the front element, remove it from the queue, and return it."""
-        front = self.queue.head.next
-        remove_link(front)
-        return front.val
+    def dequeue(self, front=True) -> T:
+        """Get the front element, remove it from the queue, and return it. 
+        If we want the last element dequeued front=False"""
+        if front:
+            elm = self.queue.head.next
+            remove_link(elm)
+        else: 
+            elm = self.queue.head.prev
+            remove_link(elm)
+        return elm.val
+
+class ListDeque(Generic[T]):
+    """A queue of type-T elements."""
+
+    def __init__(self) -> None:
+        """Make a new queue."""
+        self.queue = []
+
+    def __str__(self) -> str:
+        return "{}".format(self.queue)
+
+    def __eq__(self, other: object) -> bool:
+        return self.queue == other.queue
+
+    def is_empty(self) -> bool:
+        """Check if this queue is empty."""
+        if len(self.queue)==0:
+            return True
+        else:
+            return False
+
+    def enqueue(self, x: T, last=True) -> None:
+        """Add x to the end of this queue.
+        If elements has to be added to the front, end=False"""
+        if last:
+            self.queue.append(x)
+        else: 
+            self.queue.insert(0,x)
+
+    def front(self) -> T:
+        """Get the front element of the queue."""
+        return self.queue[0]
+    
+    def end(self) -> T:
+        """Get the last element of the queue"""
+        return self.queue[-1]
+
+    def dequeue(self, front=True) -> T:
+        """Get the front element, remove it from the queue, and return it. 
+        If we want the last element dequeued front=False"""
+        if front:
+            elm = self.queue[0]
+            self.queue.pop(0)
+        else: 
+            elm = self.queue[-1]
+            self.queue.pop(-1)
+        return elm
+
